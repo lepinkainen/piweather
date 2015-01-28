@@ -92,6 +92,9 @@ if __name__ == '__main__':
     import sqlite3
     conn = sqlite3.connect("/home/pi/bin/temp.sqlite")
     c = conn.cursor()
+    
+    wunder_temp = None
+    counter = 0
 
     while True:
         c.execute("select locations.location, latest_measurement.date, latest_measurement.value from latest_measurement join locations on latest_measurement.sensor = locations.sensor where location = 'Ulko'")
@@ -103,7 +106,13 @@ if __name__ == '__main__':
 
         now = datetime.datetime.now()
 
-        wunder_stream.write({'x': now, 'y': current_temp()})
+        if counter > 10 or wunder_temp == None:
+            wunder_temp = current_temp()
+            counter = 0
+        else:
+            counter += 1
+
+        wunder_stream.write({'x': now, 'y': wunder_temp})
         outside_stream.write({'x': now, 'y': out_temp})
         inside_stream.write({'x': now, 'y': in_temp})
 
