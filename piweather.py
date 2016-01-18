@@ -79,14 +79,14 @@ if __name__ == '__main__':
     figure = Figure(data=data, layout=layout)
     url = py.plot(figure, filename='piweather')
     print(url)
-    
+
     wunder_stream = py.Stream(stream_ids[0])
     wunder_stream.open()
     outside_stream = py.Stream(stream_ids[1])
     outside_stream.open()
     inside_stream = py.Stream(stream_ids[2])
     inside_stream.open()
-    
+
     import time
 
     import sqlite3
@@ -112,11 +112,14 @@ if __name__ == '__main__':
         else:
             counter += 1
 
+        print(wunder_stream.stream_id)
         wunder_stream.write({'x': now, 'y': wunder_temp})
+        print(outside_stream.stream_id)
         outside_stream.write({'x': now, 'y': out_temp})
+        print(inside_stream.stream_id)
         inside_stream.write({'x': now, 'y': in_temp})
 
-        time.sleep(60)
+        time.sleep(75)
 
 
     # scheduler = BlockingScheduler()
